@@ -15,6 +15,7 @@ app.get('/api/health', (c) => c.json({ status: 'ok', service: 'ClipForge' }))
 
 const FAL_MODELS: Record<string, string> = {
   sadtalker: 'fal-ai/sadtalker',
+    kling: 'fal-ai/kling-video/ai-avatar/v2/standard',
   omnihuman: 'fal-ai/bytedance/omnihuman',
 }
 
@@ -287,6 +288,7 @@ app.get('/', (c) => {
           </p>
           <select id="ai-lip-model" class="w-full bg-cc-panel border border-cc-border rounded-lg px-3 py-2 text-xs mb-2">
             <option value="sadtalker">SadTalker — 절약 모드 (회당 ~150원)</option>
+            <option value="kling">Kling Standard — 가성비 AI (초당 약 85원)</option>
             <option value="omnihuman">OmniHuman — 캡컷급 고품질 (초당 ~200원)</option>
           </select>
           <button id="btn-ai-lipsync" class="w-full px-4 py-2.5 rounded-lg bg-gradient-to-r from-cc-accent2 to-purple-500 text-white font-bold text-sm hover:opacity-90 transition disabled:opacity-40 disabled:cursor-not-allowed" disabled>
