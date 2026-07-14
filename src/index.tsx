@@ -35,7 +35,7 @@ app.post('/api/lipsync/upload', async (c) => {
   if (!body || body.byteLength === 0) return c.json({ error: '빈 파일이에요.' }, 400)
 
   // 1) 업로드 세션 생성
-  const initRes = await fetch('https://rest.alpha.fal.ai/storage/upload/initiate', {
+  const initRes = await fetch('https://rest.alpha.fal.ai/storage/upload/initiate?storage_type=fal-cdn-v3', {
     method: 'POST',
     headers: {
       'Authorization': `Key ${falKey}`,
@@ -43,7 +43,17 @@ app.post('/api/lipsync/upload', async (c) => {
     },
     body: JSON.stringify({ content_type: contentType, file_name: fileName }),
   })
-  const initData = await initRes.json<any>()
+  const initText = await initRes.text()
+let initData: any
+try {
+  initData = JSON.parse(initText)
+} catch {
+  return c.json({
+    error: 'fal 스토리지 응답 오류',
+    detail: initText.slice(0, 500) || `HTTP ${initRes.status}`,
+  }, 502)
+}
+
   if (!initRes.ok || !initData.upload_url) {
     return c.json({ error: 'fal 스토리지 초기화 실패', detail: initData }, 502)
   }
