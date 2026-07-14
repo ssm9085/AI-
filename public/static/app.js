@@ -937,9 +937,11 @@ aiEls.btn.addEventListener('click', async () => {
 
   const model = aiEls.model.value;
   const dur = Math.ceil(state.audioDuration);
-  const costMsg = model === 'omnihuman'
-    ? `OmniHuman은 초당 약 200원이 결제돼요.\n오디오 길이 ${dur}초 → 약 ${(dur * 200).toLocaleString()}원 예상.\n\n진행할까요?`
-    : `SadTalker는 회당 약 100~200원이 결제돼요.\n\n진행할까요?`;
+  const costMsg = model === 'kling'
+  ? `Kling Standard는 초당 약 85원이 결제돼요.\n오디오 길이 ${dur}초 → 약 ${(dur * 85).toLocaleString()}원 예상`
+  : model === 'omnihuman'
+    ? `OmniHuman은 초당 약 200원이 결제돼요.\n오디오 길이 ${dur}초 → 약 ${(dur * 200).toLocaleString()}원 예상`
+    : `SadTalker는 회당 약 100~200원이 결제돼요.\n계속할까요?`;
   if (!confirm(costMsg)) return;
 
   aiRunning = true;
