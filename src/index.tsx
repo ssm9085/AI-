@@ -116,7 +116,17 @@ app.post('/api/lipsync/submit', async (c) => {
     body: JSON.stringify(input),
   })
 
-  const data = await res.json<any>()
+  const resText = await res.text()
+let data: any
+
+try {
+  data = JSON.parse(resText)
+} catch {
+  return c.json({
+    error: `fal.ai 제출 응답 오류 (HTTP ${res.status}): ${resText.slice(0, 500) || '빈 응답'}`,
+  }, 502)
+}
+
   if (!res.ok) {
     const msg = data?.detail || data?.error || JSON.stringify(data)
     return c.json({ error: `fal.ai 오류 (${res.status}): ${msg}` }, 502)
