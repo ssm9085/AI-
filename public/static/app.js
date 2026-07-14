@@ -919,16 +919,20 @@ updateUI = function () {
   updateAiButton();
 };
 
-// 파일을 백엔드 경유로 fal.ai 스토리지에 업로드 → 공개 URL 획득
+// 파일을 Base64 Data URI로 변환하여 fal.ai에 직접 전달
 async function uploadToFal(file) {
-  const res = await fetch(`/api/lipsync/upload?name=${encodeURIComponent(file.name)}`, {
-    method: 'POST',
-    headers: { 'Content-Type': file.type || 'application/octet-stream' },
-    body: file,
+  if (file.size > 8 * 1024 * 1024) {
+    throw new Error(`${file.name} 파일이 너무 커요. 8MB 이하 파일을 사용해주세요.`);
+  }
+
+  return await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(new Error(`${file.name} 파일 읽기 실패`));
+
+    reader.readAsDataURL(file);
   });
-  const data = await res.json();
-  if (!res.ok || !data.file_url) throw new Error(data.error || '파일 업로드 실패');
-  return data.file_url;
 }
 
 aiEls.btn.addEventListener('click', async () => {
